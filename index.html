@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Quickie</title>
+    <meta charset="utf-8">
+    <style>
+      html {
+          color: #ccc;
+          background-color: #333;
+          font: 16px/24px Tahoma, sasns-serif;
+      }
+      body {
+          margin: 0;
+          padding: 6px;
+      }
+      fieldset {
+          border: 0;
+          padding: 0;
+      }
+
+      nav {
+          margin-bottom: 12px;
+      }
+      #Filter {
+          color: #ccc;
+          background-color: #333;
+          font: 16px/24px Tahoma, sasns-serif;
+          border: 0;
+          border-bottom: 2px solid #888;
+          border-radius: 6px;
+          padding: 0 12px 6px;
+          margin: 0 6px;
+          align-self: start;
+      }
+      nav > .tags {
+          grid-column: 1/-1;
+      }
+      @media(min-width: 615px) { /* 6(mar) + 300(col) + 3(gap) + 300(col) + 6(mar) */
+          nav > .tags {
+              grid-column: 2/-1;
+          }
+      }
+      nav > .tags > span {
+          cursor: pointer;
+          font-size: 14px;
+          margin-left: 12px;
+          color: #ccc;
+      }
+      nav > .tags > .exclude {
+          color: #888;
+      }
+
+      nav,
+      main {
+          display: grid;
+          grid-gap: 3px;
+          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      }
+
+      main {
+          grid-auto-rows: 36px;
+      }
+      main > a {
+          text-decoration: none;
+          color: #ccc;
+          background-color: #222;
+          border-radius: 6px;
+          padding-left: 12px;
+          display: flex;
+          align-items: center;
+      }
+      main > a:visited {
+          color: #ccc;
+      }
+      main > a:hover {
+          background-color: #111;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <input id="Filter" type="search" placeholder="filter" autofocus>
+
+      <div class="tags">
+        <span>shopify</span>
+        <span>personal</span>
+        <span>id</span>
+        <span class="exclude">amazon</span>
+        <span>shopify</span>
+        <span>personal</span>
+        <span>id</span>
+        <span>amazon</span>
+      </div>
+    </nav>
+
+    <main>
+      <a href="http://styleguide.myshopify.com/" class="shopify ref fed">
+        Admin Styleguide
+      </a>
+
+      <a href="https://unicorn.shopify.com/" class="shopify org adm">
+        Unicorn</a>
+
+      <a href="https://drive.google.com/drive/my-drive" class="shopify google">
+        Google drive</a>
+
+
+      <a href="http://styleguide.myshopify.com/" class="shopify ref fed">
+        Admin Styleguide</a>
+
+      <a href="https://unicorn.shopify.com/" class="shopify org adm">
+        Unicorn</a>
+
+      <a href="https://drive.google.com/drive/my-drive" class="shopify google">
+        Google drive</a>
+
+
+      <a href="http://styleguide.myshopify.com/" class="shopify ref fed">
+        Admin Styleguide</a>
+
+      <a href="https://unicorn.shopify.com/" class="shopify org adm">
+        Unicorn</a>
+
+      <a href="https://drive.google.com/drive/my-drive" class="shopify google">
+        Google drive</a>
+    </main>
+  </body>
+</html>
