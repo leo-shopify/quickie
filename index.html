@@ -96,7 +96,7 @@
   </head>
   <body>
     <nav>
-      <input id="Search" type="search" list="Links" placeholder="Search" autofocus>
+      <input id="Search" type="search" list="Links" placeholder="Search">
       <datalist id="Links"></datalist>
 
       <div class="tags"></div>
@@ -126,6 +126,15 @@
           const href = linkIndex.get(evt.target.value);
           if (href) window.location.href = href;
         };
+      }
+
+      function makeOnKeyUp(search) {
+        return function onKeyUp(evt) {
+          if (evt.key === 'Escape') {
+            search.value = '';
+            search.focus();
+          }
+        }
       }
 
       function makeTag(group) {
@@ -160,6 +169,7 @@
         const search = document.querySelector('#Search');
         search.onselect = makeOnSelect(linkIndex);
         search.tabIndex = tabIndex1;
+        search.onkeyup = document.onkeyup = makeOnKeyUp(search);
 
         const tags = document.querySelector('nav > .tags');
         groups.forEach(it => {
