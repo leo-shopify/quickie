@@ -21,7 +21,7 @@
       nav {
           margin-bottom: 12px;
       }
-      #Search {
+      #Search > input {
           color: #ccc;
           background-color: #333;
           font: 16px/24px Tahoma, sasns-serif;
@@ -96,8 +96,10 @@
   </head>
   <body>
     <nav>
-      <input id="Search" type="search" list="Links" placeholder="Search">
-      <datalist id="Links"></datalist>
+      <form id="Search">
+        <input type="search" list="Links" placeholder="Search">
+        <datalist id="Links"></datalist>
+      </form>
 
       <div class="tags"></div>
     </nav>
@@ -121,10 +123,11 @@
         return option;
       }
 
-      function makeOnSelect(linkIndex) {
-        return function onSelect(evt) {
-          const href = linkIndex.get(evt.target.value);
+      function makeOnSubmit(searchField, linkIndex) {
+        return function onSubmit(evt) {
+          const href = linkIndex.get(searchField.value);
           if (href) window.location.href = href;
+          evt.preventDefault();
         };
       }
 
@@ -174,14 +177,15 @@
           dlistRoot.appendChild(option);
         });
 
-        const search = document.querySelector('#Search');
-        search.onselect = makeOnSelect(linkIndex);
-        search.tabIndex = tabIndex1;
+        const searchForm = document.querySelector('#Search');
+        const searchField = searchForm.querySelector('input');
+        searchForm.onsubmit = makeOnSubmit(searchField, linkIndex);
+        searchField.tabIndex = tabIndex1;
 
-        const onKeyUp = makeOnKeyUp(search);
-        search.onkeyup = onKeyUp;
+        const onKeyUp = makeOnKeyUp(searchField);
+        searchField.onkeyup = onKeyUp;
         document.onkeyup = onKeyUp;
-        document.onclick = makeOnBodyClick(search);
+        document.onclick = makeOnBodyClick(searchField);
 
         const tags = document.querySelector('nav > .tags');
         groups.forEach(it => {
