@@ -128,12 +128,20 @@
         };
       }
 
+      function clearAndFocus(elm) {
+        elm.value = '';
+        elm.focus();
+      }
+
       function makeOnKeyUp(search) {
         return function onKeyUp(evt) {
-          if (evt.key === 'Escape') {
-            search.value = '';
-            search.focus();
-          }
+          if (evt.key === 'Escape') clearAndFocus(search);
+        }
+      }
+
+      function makeOnBodyClick(search) {
+        return function onBodyClick(evt) {
+          clearAndFocus(search);
         }
       }
 
@@ -169,13 +177,18 @@
         const search = document.querySelector('#Search');
         search.onselect = makeOnSelect(linkIndex);
         search.tabIndex = tabIndex1;
-        search.onkeyup = document.onkeyup = makeOnKeyUp(search);
+
+        const onKeyUp = makeOnKeyUp(search);
+        search.onkeyup = onKeyUp;
+        document.onkeyup = onKeyUp;
+        document.onclick = makeOnBodyClick(search);
 
         const tags = document.querySelector('nav > .tags');
         groups.forEach(it => {
           const tag = makeTag(it);
           tags.appendChild(tag);
         });
+
       }
 
       start([
