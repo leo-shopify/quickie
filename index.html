@@ -21,7 +21,7 @@
       nav {
           margin-bottom: 12px;
       }
-      #Filter {
+      #Search {
           color: #ccc;
           background-color: #333;
           font: 16px/24px Tahoma, sasns-serif;
@@ -79,9 +79,10 @@
   </head>
   <body>
     <nav>
-      <input id="Filter" type="search" placeholder="filter" autofocus>
+      <input id="Search" type="search" list="Links" placeholder="Search" autofocus>
+      <datalist id="Links"></datalist>
 
-      <div class="tags">
+      <div class="tags" hidden>
         <span>shopify</span>
         <span>personal</span>
         <span>id</span>
@@ -93,40 +94,51 @@
       </div>
     </nav>
 
-    <main>
-      <a href="http://styleguide.myshopify.com/" class="shopify ref fed">
-        Admin Styleguide
-      </a>
-
-      <a href="https://unicorn.shopify.com/" class="shopify org adm">
-        Unicorn</a>
-
-      <a href="https://drive.google.com/drive/my-drive" class="shopify google">
-        Google drive</a>
-
-
-      <a href="http://styleguide.myshopify.com/" class="shopify ref fed">
-        Admin Styleguide</a>
-
-      <a href="https://unicorn.shopify.com/" class="shopify org adm">
-        Unicorn</a>
-
-      <a href="https://drive.google.com/drive/my-drive" class="shopify google">
-        Google drive</a>
-
-
-      <a href="http://styleguide.myshopify.com/" class="shopify ref fed">
-        Admin Styleguide</a>
-
-      <a href="https://unicorn.shopify.com/" class="shopify org adm">
-        Unicorn</a>
-
-      <a href="https://drive.google.com/drive/my-drive" class="shopify google">
-        Google drive</a>
-    </main>
+    <main></main>
 
     <script>
-      const db = [
+      function makeLink(desc, href) {
+        const link = document.createElement('a');
+        link.textContent = desc;
+        link.href = href;
+        return link;
+      }
+
+      function makeOption(desc) {
+        const option = document.createElement('option');
+        option.value = desc;
+        return option;
+      }
+
+      function makeOnSelect(linkIndex) {
+        return function onSelect(evt) {
+          const href = linkIndex.get(evt.target.value);
+          if (href) window.location.href = href;
+        };
+      }
+
+      function start(db) {
+        const linkIndex = new Map();
+        const linksRoot = document.querySelector('main');
+        const dlistRoot = document.querySelector('#Links');
+
+        db.forEach(it => {
+          const [desc, href] = it;
+
+          linkIndex.set(desc, href);
+
+          const link = makeLink(desc, href);
+          linksRoot.appendChild(link);
+
+          const option = makeOption(desc);
+          dlistRoot.appendChild(option);
+        });
+
+        const search = document.querySelector('#Search');
+        search.onselect = makeOnSelect(linkIndex);
+      }
+
+      start([
         ['Github identity repo', 'https://github.com/Shopify/identity'],
         ['Github identity projects', 'https://github.com/Shopify/identity/projects/'],
         ['Github identity milestone ux', 'https://github.com/Shopify/identity/milestone/9'],
@@ -158,7 +170,7 @@
         ['Vault projects', 'https://unicorn.shopify.com/projects'],
         ['Vault data portal', 'https://data.shopify.com/'],
         ['Vault departments', 'https://vault.shopify.com/Departments']
-      ];
+      ]);
     </script>
   </body>
 </html>
