@@ -97,10 +97,11 @@
     <main></main>
 
     <script>
-      function makeLink(desc, href) {
+      function makeLink(desc, href, index) {
         const link = document.createElement('a');
         link.textContent = desc;
         link.href = href;
+        link.tabIndex = index;
         return link;
       }
 
@@ -121,13 +122,14 @@
         const linkIndex = new Map();
         const linksRoot = document.querySelector('main');
         const dlistRoot = document.querySelector('#Links');
+        const tabIndex1 = 1;
 
-        db.forEach(it => {
+        db.forEach((it, i) => {
           const [desc, href] = it;
 
           linkIndex.set(desc, href);
 
-          const link = makeLink(desc, href);
+          const link = makeLink(desc, href, i + tabIndex1);
           linksRoot.appendChild(link);
 
           const option = makeOption(desc);
@@ -136,6 +138,7 @@
 
         const search = document.querySelector('#Search');
         search.onselect = makeOnSelect(linkIndex);
+        search.tabIndex = tabIndex1;
       }
 
       start([
