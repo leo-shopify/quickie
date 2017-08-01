@@ -40,20 +40,20 @@
               grid-column: 2/-1;
           }
       }
-      nav > .tags > span {
-          cursor: pointer;
+      nav > .tags > a {
+          text-decoration: none;
           font-size: 14px;
           margin-left: 12px;
+          padding-bottom: 6px;
+          border-bottom-width: 2px;
+          border-bottom-style: solid;
           color: #ccc;
-      }
-      nav > .tags > .exclude {
-          color: #888;
       }
 
       nav,
       main {
           display: grid;
-          grid-gap: 3px;
+          grid-gap: 6px;
           grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       }
 
@@ -64,6 +64,8 @@
           text-decoration: none;
           color: #ccc;
           background-color: #222;
+          border-right-width: 6px;
+          border-right-style: solid;
           border-radius: 6px;
           padding-left: 12px;
           display: flex;
@@ -75,6 +77,21 @@
       main > a:hover {
           background-color: #111;
       }
+      main > a:focus,
+      main > a:target {
+          outline: 0 none;
+          border-top-width: 1px;
+          border-bottom-width: 1px;
+          border-left-width: 1px;
+          border-style: solid;
+      }
+
+      .identity { border-color: #844; }
+      .amazon { border-color: #684; }
+      .github { border-color: #468; }
+      .app { border-color: #874; }
+      .styleguide { border-color: #758; }
+      .vault { border-color: #488; }
     </style>
   </head>
   <body>
@@ -82,25 +99,18 @@
       <input id="Search" type="search" list="Links" placeholder="Search" autofocus>
       <datalist id="Links"></datalist>
 
-      <div class="tags" hidden>
-        <span>shopify</span>
-        <span>personal</span>
-        <span>id</span>
-        <span class="exclude">amazon</span>
-        <span>shopify</span>
-        <span>personal</span>
-        <span>id</span>
-        <span>amazon</span>
-      </div>
+      <div class="tags"></div>
     </nav>
 
     <main></main>
 
     <script>
-      function makeLink(desc, href, index) {
+      function makeLink(desc, href, group, index) {
         const link = document.createElement('a');
         link.textContent = desc;
         link.href = href;
+        link.name = group;
+        link.className = group;
         link.tabIndex = index;
         return link;
       }
@@ -118,18 +128,29 @@
         };
       }
 
+      function makeTag(group) {
+        const tag = document.createElement('a');
+        tag.textContent = group;
+        tag.href = '#' + group;
+        tag.className = group;
+        return tag;
+      }
+
       function start(db) {
+        const groups = [];
         const linkIndex = new Map();
         const linksRoot = document.querySelector('main');
         const dlistRoot = document.querySelector('#Links');
         const tabIndex1 = 1;
 
         db.forEach((it, i) => {
-          const [desc, href] = it;
+          const [group, desc, href] = it;
+
+          if (!groups.includes(group)) groups.push(group);
 
           linkIndex.set(desc, href);
 
-          const link = makeLink(desc, href, i + tabIndex1);
+          const link = makeLink(desc, href, group, i + tabIndex1);
           linksRoot.appendChild(link);
 
           const option = makeOption(desc);
@@ -139,40 +160,46 @@
         const search = document.querySelector('#Search');
         search.onselect = makeOnSelect(linkIndex);
         search.tabIndex = tabIndex1;
+
+        const tags = document.querySelector('nav > .tags');
+        groups.forEach(it => {
+          const tag = makeTag(it);
+          tags.appendChild(tag);
+        });
       }
 
       start([
-        ['Github identity repo', 'https://github.com/Shopify/identity'],
-        ['Github identity projects', 'https://github.com/Shopify/identity/projects/'],
-        ['Github identity milestone ux', 'https://github.com/Shopify/identity/milestone/9'],
-        ['Bugsnag identity js', 'https://app.bugsnag.com/shopify/identity-javascript/'],
-        ['Identity dashboard prod', 'https://accounts.shopify.com/services/dashboard'],
-        ['Identity prod', 'https://accounts.shopify.com/'],
+        ['identity', 'Github identity repo', 'https://github.com/Shopify/identity'],
+        ['identity', 'Github identity projects', 'https://github.com/Shopify/identity/projects/'],
+        ['identity', 'Github identity milestone ux', 'https://github.com/Shopify/identity/milestone/9'],
+        ['identity', 'Bugsnag identity js', 'https://app.bugsnag.com/shopify/identity-javascript/'],
+        ['identity', 'Identity dashboard prod', 'https://accounts.shopify.com/services/dashboard'],
+        ['identity', 'Identity prod', 'https://accounts.shopify.com/'],
 
-        ['Github Amazon repo', 'https://github.com/Shopify/sell-on-amazon'],
-        ['Github Amazon issues', 'https://github.com/Shopify/sell-on-amazon/issues?q=is%3Aopen+assignee%3Aleo-shopify'],
-        ['Bugsnag Amazon js', 'https://app.bugsnag.com/shopify/sell-on-amazon-js/'],
-        ['Waffle Amazon', 'https://waffle.io/Shopify/sell-on-amazon'],
-        ['Amazon dev', 'https://marki-test.myshopify.com/admin/apps/amazon-dev/'],
+        ['amazon', 'Github Amazon repo', 'https://github.com/Shopify/sell-on-amazon'],
+        ['amazon', 'Github Amazon issues', 'https://github.com/Shopify/sell-on-amazon/issues?q=is%3Aopen+assignee%3Aleo-shopify'],
+        ['amazon', 'Bugsnag Amazon js', 'https://app.bugsnag.com/shopify/sell-on-amazon-js/'],
+        ['amazon', 'Waffle Amazon', 'https://waffle.io/Shopify/sell-on-amazon'],
+        ['amazon', 'Amazon dev', 'https://marki-test.myshopify.com/admin/apps/amazon-dev/'],
 
-        ['Github leo', 'https://github.com/leo-shopify?tab=repositories'],
-        ['Github Shopify', 'https://github.com/Shopify'],
+        ['github', 'Github leo', 'https://github.com/leo-shopify?tab=repositories'],
+        ['github', 'Github Shopify', 'https://github.com/Shopify'],
 
-        ['Octobox', 'https://octobox.shopify.io/'],
-        ['Devdocs', 'http://devdocs.io/'],
-        ['Slack', 'https://shopify.slack.com/'],
-        ['Okta', 'https://shopify.okta.com/app/UserHome'],
+        ['app', 'Devdocs', 'http://devdocs.io/'],
+        ['app', 'Slack', 'https://shopify.slack.com/'],
+        ['app', 'Okta', 'https://shopify.okta.com/app/UserHome'],
+        ['app', 'Octobox', 'https://octobox.shopify.io/'],
 
-        ['Admin style guide', 'http://styleguide.myshopify.com/'],
-        ['Marketing style guide', 'http://ux.shopify.io/'],
-        ['Polaris style guide', 'https://polaris.shopify.com/'],
+        ['styleguide', 'Admin style guide', 'http://styleguide.myshopify.com/'],
+        ['styleguide', 'Marketing style guide', 'http://ux.shopify.io/'],
+        ['styleguide', 'Polaris style guide', 'https://polaris.shopify.com/'],
 
-        ['Vault unicorn', 'https://unicorn.shopify.com/'],
-        ['Vault employees', 'http://unicorn.shopify.com/employees'],
-        ['Vault teams', 'https://unicorn.shopify.com/teams'],
-        ['Vault projects', 'https://unicorn.shopify.com/projects'],
-        ['Vault data portal', 'https://data.shopify.com/'],
-        ['Vault departments', 'https://vault.shopify.com/Departments']
+        ['vault', 'Vault unicorn', 'https://unicorn.shopify.com/'],
+        ['vault', 'Vault employees', 'http://unicorn.shopify.com/employees'],
+        ['vault', 'Vault teams', 'https://unicorn.shopify.com/teams'],
+        ['vault', 'Vault projects', 'https://unicorn.shopify.com/projects'],
+        ['vault', 'Vault data portal', 'https://data.shopify.com/'],
+        ['vault', 'Vault departments', 'https://vault.shopify.com/Departments']
       ]);
     </script>
   </body>
