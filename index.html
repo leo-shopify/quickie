@@ -90,6 +90,7 @@
           border-style: solid;
       }
 
+      .first { grid-column-start: 1; }
       .identity { border-color: #844; }
       .amazon { border-color: #684; }
       .github { border-color: #468; }
@@ -111,12 +112,13 @@
     <main></main>
 
     <script>
-      function makeLink(desc, href, group, index) {
+      function makeLink(desc, href, group, isFirstInGroup, index) {
         const link = document.createElement('a');
         link.textContent = desc;
         link.href = href;
         link.name = group;
         link.className = group;
+        if (isFirstInGroup) link.classList.add('first');
         link.tabIndex = index;
         return link;
       }
@@ -162,6 +164,7 @@
 
       function start(db) {
         const groups = [];
+        let currentGroup = '';
         const linkIndex = new Map();
         const linksRoot = document.querySelector('main');
         const dlistRoot = document.querySelector('#Links');
@@ -174,7 +177,9 @@
 
           linkIndex.set(desc, href);
 
-          const link = makeLink(desc, href, group, i + tabIndex1);
+          const isFirstInGroup = currentGroup !== group;
+          const link = makeLink(desc, href, group, isFirstInGroup, i + tabIndex1);
+          currentGroup = group;
           linksRoot.appendChild(link);
 
           const option = makeOption(desc);
