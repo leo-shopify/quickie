@@ -167,7 +167,7 @@
       }
 
       function clearAndFocus(elm) {
-        elm.value = '';
+        if (document.activeElement === elm) elm.value = '';
         elm.focus();
       }
 
