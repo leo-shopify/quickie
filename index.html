@@ -64,15 +64,15 @@
           outline: 0 none;
           border-bottom-color: var(--fg);
       }
-      nav > .tags {
+      nav > tags {
           grid-column: 1/-1;
       }
       @media(min-width: 615px) { /* 6(mar) + 300(col) + 3(gap) + 300(col) + 6(mar) */
-          nav > .tags {
+          nav > tags {
               grid-column: 2/-1;
           }
       }
-      nav > .tags > a {
+      nav > tags > a {
           text-decoration: none;
           font-size: 14px;
           margin-left: 12px;
@@ -136,7 +136,7 @@
         <datalist id="Links"></datalist>
       </form>
 
-      <div class="tags"></div>
+      <tags></tags>
     </nav>
 
     <main></main>
@@ -222,7 +222,7 @@
         document.onkeyup = onKeyUp;
         document.onclick = makeOnBodyClick(searchField);
 
-        const tags = document.querySelector('nav > .tags');
+        const tags = document.querySelector('nav > tags');
         groups.forEach(it => {
           const tag = makeTag(it);
           tags.appendChild(tag);
